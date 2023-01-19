@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Domain Availability Checker</title>
+    <style>
+        /* Add some basic styling to the form elements */
+        form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+        label, input {
+            display: block;
+            margin: 20px 0;
+        }
+        /* Style the button */
+        button {
+            padding: 10px 20px;
+            background-color: #2196F3;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        /* Style the result message */
+        #result {
+            margin: 20px 0;
+            padding: 10px;
+            font-size: 1.2em;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <form>
+        <label>Enter a website URL:</label>
+        <input type="text" id="url" placeholder="e.g. https://example.com">
+        <button type="button" onclick="checkAvailability()">Check</button>
+    </form>
+    <p id="result"></p>
+
+    <script>
+        function checkAvailability() {
+            // Get the URL from the input field
+            let url = document.getElementById("url").value;
+
+            // Extract the hostname from the URL
+            let hostname = new URL(url).hostname;
+
+            // Use the fetch API to perform a DNS lookup
+            fetch(`https://dns.google.com/resolve?name=${hostname}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.Status === 0) {
+                        document.getElementById("result").innerHTML = `${hostname} is available`;
+                    } else {
+                        document.getElementById("result").innerHTML = `Error: ${hostname} is not available`;
+                    }
+                })
+                .catch(error => {
+                    document.getElementById("result").innerHTML = `Error: ${error}`;
+                });
+        }
+    </script>
+
+</body>
+</html>
